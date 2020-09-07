@@ -74,7 +74,7 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * 3600 + minute
  * Определить длину того же отрезка в метрах (в данном случае 18.98).
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
-fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = sagenes * 48 * 4.445 + arshins * 16 * 4.445 + vershoks * 4.445
+fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (sagenes * 48 * 4.445 + arshins * 16 * 4.445 + vershoks * 4.445) / 100.0
 
 /**
  * Тривиальная (1 балл)
@@ -82,7 +82,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = sagenes 
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(deg: Int, min: Int, sec: Int): Double = TODO()
+fun angleInRadian(deg: Int, min: Int, sec: Int): Double = (deg + min / 60.0 + sec / 3600.0) * PI
 
 /**
  * Тривиальная (1 балл)
@@ -116,7 +116,12 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double = 1.0
+fun accountInThreeYears(initial: Int, percent: Int): Double {
+    val first_year = initial + initial * percent / 100.0
+    val second_year = first_year + first_year * percent / 100.0
+    val third_year = second_year + second_year * percent / 100.0
+    return third_year
+}
 
 /**
  * Простая (2 балла)
@@ -124,4 +129,12 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = 1.0
  * Пользователь задает целое трехзначное число (например, 478).
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = TODO()
+fun numberRevert(number: Int): Int {
+    var ans = 0
+    var k = 10
+    while (number != 0) {
+        ans = ans * 10 + (number % k) / (k / 10)
+        k *= 10
+    }
+    return ans
+}
