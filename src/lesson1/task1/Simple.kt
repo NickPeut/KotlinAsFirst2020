@@ -53,7 +53,7 @@ fun quadraticRootProduct(a: Double, b: Double, c: Double): Double {
  * Пример главной функции
  */
 fun main() {
-    val ans = numberRevert(876)
+    val ans = numberRevert(100)
     println("Root product: $ans")
 }
 
@@ -132,7 +132,7 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
 fun numberRevert(number: Int): Int {
     var ans = 0
     var k = 10
-    while (number * 10 > k) {
+    while (number * 10 >= k) {
         ans = ans * 10 + (number % k) / (k / 10)
         k *= 10
     }
