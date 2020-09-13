@@ -53,7 +53,7 @@ fun quadraticRootProduct(a: Double, b: Double, c: Double): Double {
  * Пример главной функции
  */
 fun main() {
-    val ans = numberRevert(567)
+    val ans = numberRevert(392205989)
     println(ans)
 }
 

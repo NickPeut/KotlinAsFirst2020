@@ -150,7 +150,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
 fun revert(n: Int): Int {
     var ans = 0
     var k = 10
-    while (n * 10 >= k) {
+    while (n >= k / 10) {
         ans = ans * 10 + (n % k) / (k / 10)
         k *= 10
         if (k % 10 != 0) break //я не придумала как иначе обработать случай переполнения k
