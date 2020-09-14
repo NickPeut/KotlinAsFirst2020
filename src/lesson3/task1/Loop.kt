@@ -3,7 +3,6 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
-import java.util.Collections.swap
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -20,7 +19,7 @@ import kotlin.math.sqrt
 fun factorial(n: Int): Double {
     var result = 1.0
     for (i in 1..n) {
-        result = result * i // Please do not fix in master
+        result *= i // Please do not fix in master
     }
     return result
 }
@@ -248,7 +247,7 @@ fun isPalindrome(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    if(n < 10) return false
+    if (n < 10) return false
     val k = n % 10
     var num = n / 10
     while (num != 0 && k == num % 10) {
