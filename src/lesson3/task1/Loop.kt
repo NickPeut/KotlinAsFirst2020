@@ -6,6 +6,7 @@ import lesson1.task1.sqr
 import java.util.zip.DeflaterOutputStream
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -269,12 +270,13 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x1: Double, eps: Double): Double {
-    val x = x1 - 2 * PI * (x1 / (2 * PI)).toInt()
+    var x = abs(x1) % (2 * PI)
+    if (x1 < 0) x *= -1
     var ans = 0.0
     var fact = 1
     var k = 1.0
     var xs = x
-    while (xs / factorial(fact) > eps) {
+    while (abs(xs / factorial(fact)) >= eps) {
         ans += k * (xs / factorial(fact))
         k = -k
         xs *= x * x
@@ -293,7 +295,7 @@ fun sin(x1: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x1: Double, eps: Double): Double {
-    val x = x1 - 2 * PI * (x1 / (2 * PI)).toInt()
+    val x = abs(x1) % (2 * PI)
     var ans = 0.0
     var fact = 0
     var k = 1.0
@@ -321,14 +323,19 @@ fun squareSequenceDigit(n: Int): Int {
     var ans = 1
     for (i in 1..n + 1) {
         var t = i * i
-        while (k < n && t != 0) {
+        while (t != 0) {
             k++
-            ans = t % 10
             t /= 10
         }
-        if (k >= n) return ans
+        if (k >= n) {
+            val tmp = 10.0
+            val count = tmp.pow(k - n - 1).toInt()
+            ans = (i * i) / count
+            break
+        }
+        if (k >= n) return ans % 10
     }
-    return ans
+    return ans % 10
 }
 
 /**
