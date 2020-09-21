@@ -95,13 +95,8 @@ fun timeForHalfWay(
 ): Double {
     val s = (t1 * v1 + t2 * v2 + t3 * v3) / 2.0
     return when {
-        s == t1 * v1 -> t1
-        s > t1 * v1 && s <= t1 * v1 + t2 * v2 -> {
-            t1 + (s - v1 * t1) / v2
-        }
-        s > t1 * v1 + t2 * v2 -> {
-            t1 + t2 + (s - v1 * t1 - v2 * t2) / v3
-        }
+        s >= t1 * v1 && s <= t1 * v1 + t2 * v2 -> t1 + (s - v1 * t1) / v2
+        s > t1 * v1 + t2 * v2 -> t1 + t2 + (s - v1 * t1 - v2 * t2) / v3
         else -> s / v1
     }
 }
@@ -156,18 +151,18 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int {
-    return if (a + b > c && a + c > b && c + b > a) {
-        when {
-            a * a + b * b == c * c -> 1
-            a * a + c * c == b * b -> 1
-            c * c + b * b == a * a -> 1
-            (a * a + b * b - c * c) / 2 * a * b < 0 -> 2
-            (b * b + c * c - a * a) / 2 * c * b < 0 -> 2
-            (a * a + c * c - b * b) / 2 * a * c < 0 -> 2
-            else -> 0
-        }
-    } else -1
+fun triangleKind(a1: Double, b1: Double, c1: Double): Int {
+    val a = minOf(a1, b1, c1)
+    val b = maxOf(minOf(a1, b1), minOf(b1, c1), minOf(a1, c1))
+    val c = maxOf(a1, b1, c1)
+
+    return when {
+        c + b <= a || a + b <= c || a + c <= b -> -1
+        a * a + b * b == c * c -> 1
+        (a * a + b * b - c * c) / 2 * a * b < 0 -> 2
+        else -> 0
+
+    }
 }
 
 /**

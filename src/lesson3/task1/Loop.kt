@@ -3,6 +3,8 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import java.util.zip.DeflaterOutputStream
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -266,7 +268,20 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x1: Double, eps: Double): Double {
+    val x = x1 - 2 * PI * (x1 / (2 * PI)).toInt()
+    var ans = 0.0
+    var fact = 1
+    var k = 1.0
+    var xs = x
+    while (xs / factorial(fact) > eps) {
+        ans += k * (xs / factorial(fact))
+        k = -k
+        xs *= x * x
+        fact += 2
+    }
+    return ans
+}
 
 /**
  * Средняя (4 балла)
@@ -277,7 +292,20 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x1: Double, eps: Double): Double {
+    val x = x1 - 2 * PI * (x1 / (2 * PI)).toInt()
+    var ans = 0.0
+    var fact = 0
+    var k = 1.0
+    var xs = 1.0
+    while (xs / factorial(fact) > eps) {
+        ans += k * (xs / factorial(fact))
+        k = -k
+        xs *= x * x
+        fact += 2
+    }
+    return ans
+}
 
 /**
  * Сложная (4 балла)
@@ -288,7 +316,20 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var k = 0
+    var ans = 1
+    for (i in 1..n + 1) {
+        var t = i * i
+        while (k < n && t != 0) {
+            k++
+            ans = t % 10
+            t /= 10
+        }
+        if (k >= n) return ans
+    }
+    return ans
+}
 
 /**
  * Сложная (5 баллов)
