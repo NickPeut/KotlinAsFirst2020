@@ -135,13 +135,11 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int {
-    return if (kingX == rookX || kingY == rookY) {
-        if (abs(kingX - bishopX) == abs(kingY - bishopY)) 3
-        else 1
-    } else if (abs(kingX - bishopX) == abs(kingY - bishopY)) 2
-    else 0
-}
+): Int = if (kingX == rookX || kingY == rookY) {
+    if (abs(kingX - bishopX) == abs(kingY - bishopY)) 3
+    else 1
+} else if (abs(kingX - bishopX) == abs(kingY - bishopY)) 2
+else 0
 
 /**
  * Простая (2 балла)
