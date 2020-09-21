@@ -141,6 +141,7 @@ fun rookOrBishopThreatens(
 } else if (abs(kingX - bishopX) == abs(kingY - bishopY)) 2
 else 0
 
+
 /**
  * Простая (2 балла)
  *
