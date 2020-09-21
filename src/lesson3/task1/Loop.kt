@@ -329,11 +329,10 @@ fun squareSequenceDigit(n: Int): Int {
         }
         if (k >= n) {
             val tmp = 10.0
-            val count = tmp.pow(k - n - 1).toInt()
+            val count = tmp.pow(maxOf(k - n)).toInt()
             ans = (i * i) / count
-            break
+            return ans % 10
         }
-        if (k >= n) return ans % 10
     }
     return ans % 10
 }
