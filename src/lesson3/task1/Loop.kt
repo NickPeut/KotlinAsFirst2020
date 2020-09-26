@@ -4,10 +4,7 @@ package lesson3.task1
 
 import lesson1.task1.sqr
 import java.util.zip.DeflaterOutputStream
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -98,11 +95,9 @@ fun fib(n: Int): Int {
     var a = 1
     var b = 2
     var c = 2
-    var k = 3
     if (n < 3) return 1
     if (n == 3) return 2
-    while (n != k) {
-        k++
+    for (k in 3 until n) {
         c = a + b
         a = b
         b = c
@@ -116,7 +111,8 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..n) {
+    if (n % 2 == 0) return 2
+    for (i in 3..sqrt(n.toDouble()).toInt() step 2) {
         if (n % i == 0) return i
     }
     return n
@@ -127,13 +123,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var ans = 1
-    for (i in 2 until n) {
-        if (n % i == 0) ans = i
-    }
-    return ans
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая (2 балла)
@@ -176,7 +166,7 @@ fun gcd(m: Int, n: Int): Int {
     return a + b
 }
 
-fun lcm(m: Int, n: Int): Int = n * m / gcd(n, m)
+fun lcm(m: Int, n: Int): Int = n / gcd(n, m) * m
 
 /**
  * Средняя (3 балла)
@@ -256,8 +246,7 @@ fun hasDifferentDigits(n: Int): Boolean {
     while (num != 0 && k == num % 10) {
         num /= 10
     }
-    if (num != 0) return true
-    return false
+    return num != 0
 }
 
 /**
@@ -321,12 +310,8 @@ fun cos(x1: Double, eps: Double): Double {
 fun squareSequenceDigit(n: Int): Int {
     var k = 0
     var ans = 1
-    for (i in 1..n + 1) {
-        var t = i * i
-        while (t != 0) {
-            k++
-            t /= 10
-        }
+    for (i in 1..n) {
+        k += digitNumber(i * i)
         if (k >= n) {
             val tmp = 10.0
             val count = tmp.pow(maxOf(k - n)).toInt()
