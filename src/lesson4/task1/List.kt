@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson1.task1.numberRevert
 import lesson3.task1.isPrime
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -295,7 +296,19 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var k = base.toDouble().pow(str.length - 1).toInt()
+    var ans = 0
+    for (i in str) {
+        ans += if (i in '0'..'9') {
+            (i - '0') * k
+        } else {
+            (i - 'a' + 10) * k
+        }
+        k /= base
+    }
+    return ans
+}
 
 /**
  * Сложная (5 баллов)
