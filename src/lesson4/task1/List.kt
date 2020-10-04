@@ -178,7 +178,6 @@ fun times(a: List<Int>, b: List<Int>): Int = (a zip b).map { (x, y) -> x * y }.s
  * Значение пустого многочлена равно 0 при любом x.
  */
 fun polynom(p: List<Int>, x: Int): Int {
-    if (p.isEmpty()) return 0
     var ans = 0
     var y = 1
     for (i in p) {
@@ -199,7 +198,6 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    if (list.isEmpty()) return list
     var sum = 0
     for (i in 0 until list.size) {
         sum += list[i]
@@ -219,14 +217,14 @@ fun factorize(n: Int): List<Int> {
     val ans = mutableListOf<Int>()
     var number = n
     var k = 2
-    if (isPrime(n)) return listOf(n)
     while (number > 1) {
-        while (number % k.toDouble() == 0.0) {
+        while (number % k == 0) {
             ans.add(k)
             number /= k
         }
         k++
     }
+    if (ans.isEmpty()) return listOf(n)
     return ans
 }
 
@@ -297,15 +295,15 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var k = base.toDouble().pow(str.length - 1).toInt()
+    var k = 1
     var ans = 0
-    for (i in str) {
-        ans += if (i in '0'..'9') {
-            (i - '0') * k
+    for (i in 1..str.length) {
+        ans += if (str[str.length - i] in '0'..'9') {
+            (str[str.length - i] - '0') * k
         } else {
-            (i - 'a' + 10) * k
+            (str[str.length - i] - 'a' + 10) * k
         }
-        k /= base
+        k *= base
     }
     return ans
 }
