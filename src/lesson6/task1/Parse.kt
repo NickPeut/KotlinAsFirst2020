@@ -2,6 +2,10 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+import java.util.*
+import kotlin.math.max
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,7 +78,47 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val month = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    val date = str.split(' ').toMutableList()
+    if (date.size < 3)
+        return ""
+    if (!isNumber(date[0]) || !isNumber(date[2]) || date[1] !in month) {
+        return ""
+    }
+    var j = 0
+    for (i in 0..month.size)
+        if (month[i] == date[1]) {
+            j = i
+            break
+        }
+    if (date[0].toInt() > daysInMonth(j + 1, date[2].toInt()))
+        return ""
+    date[0] = twoDigitStr(date[0].toInt())
+    date[1] = twoDigitStr(j + 1)
+    return date.joinToString(separator = ".")
+}
+
+fun isNumber(s: String): Boolean {
+    for (i in s) {
+        if (!i.isDigit())
+            return false
+    }
+    return true
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +130,34 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val month = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    val date = digital.split('.').toMutableList()
+    if (date.size != 3)
+        return ""
+
+    if (!isNumber(date[0]) || !isNumber(date[2]) || !isNumber(date[1]))
+        return ""
+
+    if (date[0].toInt() > daysInMonth(date[1].toInt(), date[2].toInt()))
+        return ""
+    date[0] = date[0].toInt().toString()
+    date[1] = month[date[1].toInt() - 1]
+    return date.joinToString(separator = " ")
+}
 
 /**
  * Средняя (4 балла)
@@ -102,7 +173,15 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    if (checkPhone(phone))
+        return ""
+    return phone.filter { it.isDigit() || it == '+' }
+}
+
+fun checkPhone(phone: String): Boolean =
+    phone.count { it.isDigit() || it == ' ' || it == '+' || it == '-' || it == '(' || it == ')' } < phone.length ||
+            "()" in phone
 
 /**
  * Средняя (5 баллов)
@@ -114,7 +193,15 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    if (checkRes(jumps))
+        return -1
+    return Collections.max(jumps.split(" ").filter { it -> isNumber(it) }.map { it -> it.toInt() })
+}
+
+fun checkRes(jumps: String): Boolean =
+    jumps.count { it.isDigit() } == 0 ||
+            jumps.count { it.isDigit() || it == ' ' || it == '-' || it == '%' } < jumps.length
 
 /**
  * Сложная (6 баллов)
@@ -127,7 +214,30 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val list = jumps.split(" ")
+    if (checkHeight(jumps, list))
+        return -1
+    var ans = -1
+    for (i in list.indices step 2) {
+        if ('+' in list[i + 1]) {
+            ans = max(ans, list[i].toInt())
+        }
+    }
+    return ans
+}
+
+
+fun checkHeight(jumps: String, list: List<String>): Boolean {
+    if (list.size % 2 != 0) return true
+    for (i in list.indices step 2) {
+        if (!isNumber(list[i]) || isNumber(list[i + 1])) {
+            return true
+        }
+    }
+    return jumps.count { it.isDigit() } == 0 ||
+            jumps.count { it.isDigit() || it == ' ' || it == '-' || it == '%' || it == '+'} < jumps.length
+}
 
 /**
  * Сложная (6 баллов)
