@@ -105,7 +105,7 @@ fun sibilants(inputName: String, outputName: String) {
             it.write(line[0].toString())
             for (i in 1 until line.length)
                 if (line[i - 1].toLowerCase() in set && line[i] in letters)
-                    it.write(letters[line[i]])
+                    it.write(letters.getValue(line[i]))
                 else it.write(line[i].toString())
             it.newLine()
         }
