@@ -112,13 +112,8 @@ fun dateStrToDigit(str: String): String {
     return date.joinToString(separator = ".")
 }
 
-fun isNumber(s: String): Boolean {
-    for (i in s) {
-        if (!i.isDigit())
-            return false
-    }
-    return true
-}
+fun isNumber(s: String): Boolean = s.all { it.isDigit() };
+
 
 /**
  * Средняя (4 балла)
@@ -227,7 +222,6 @@ fun bestHighJump(jumps: String): Int {
     return ans
 }
 
-
 fun checkHeight(jumps: String, list: List<String>): Boolean {
     if (list.size % 2 != 0) return true
     for (i in list.indices step 2) {
@@ -236,7 +230,7 @@ fun checkHeight(jumps: String, list: List<String>): Boolean {
         }
     }
     return jumps.count { it.isDigit() } == 0 ||
-            jumps.count { it.isDigit() || it == ' ' || it == '-' || it == '%' || it == '+'} < jumps.length
+            jumps.count { it.isDigit() || it == ' ' || it == '-' || it == '%' || it == '+' } < jumps.length
 }
 
 /**
@@ -248,7 +242,35 @@ fun checkHeight(jumps: String, list: List<String>): Boolean {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val list = expression.split(' ')
+    if (!check(list))
+        throw IllegalArgumentException()
+    var ans = list[0].toInt()
+    for (i in 1 until list.size step 2) {
+        if (list[i] == "+") {
+            ans += list[i + 1].toInt()
+        } else {
+            ans -= list[i + 1].toInt()
+        }
+    }
+    return ans
+}
+
+fun check(value: List<String>): Boolean {
+    if (value.size == 1) return isNumber(value[0])
+    var flag = true
+    for (i in value) {
+        flag = if (flag && isNumber(i)) {
+            false
+        } else if (!flag && !isNumber(i)) {
+            true
+        } else {
+            return false
+        }
+    }
+    return true
+}
 
 /**
  * Сложная (6 баллов)
@@ -259,7 +281,17 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var index = 0
+    val list = str.split(' ')
+    for (i in 0..list.size - 2) {
+        if (list[i].equals(list[i + 1], ignoreCase = true)) {
+            return index
+        }
+        index += list[i].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
@@ -272,7 +304,18 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val tmp = description.split(";").map { it.split(" ") }.map { it.filter { i -> i.isNotEmpty() } }
+    if (!checkList(tmp)) return ""
+    return tmp.map { it[0] to it[1].toDouble() }.maxByOrNull { it.second }!!.first;
+}
+
+fun checkList(tmp: List<List<String>>): Boolean = tmp.all { it.size == 2 && isDouble(it[1]) }
+
+fun isDouble(s: String): Boolean {
+    val list = s.split(".")
+    return list.size == 2 && isNumber(list[0]) && isNumber(list[1])
+}
 
 /**
  * Сложная (6 баллов)
