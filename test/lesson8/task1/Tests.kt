@@ -156,6 +156,7 @@ class Tests {
         val p4 = Point(3.0, -1.0)
         val p5 = Point(-3.0, -2.0)
         val p6 = Point(0.0, 5.0)
+
         assertApproxEquals(Segment(p5, p6), diameter(p1, p2, p3, p4, p5, p6))
         assertApproxEquals(Segment(p4, p6), diameter(p1, p2, p3, p4, p6))
         assertApproxEquals(Segment(p3, p4), diameter(p1, p2, p3, p4))
