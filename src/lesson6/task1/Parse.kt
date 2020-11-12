@@ -314,7 +314,7 @@ fun checkList(tmp: List<List<String>>): Boolean = tmp.all { it.size == 2 && isDo
 
 fun isDouble(s: String): Boolean {
     val list = s.split(".")
-    return list.size == 2 && isNumber(list[0]) && isNumber(list[1])
+    return (list.size == 1 && isNumber(list[0])) || (list.size == 2 && isNumber(list[0]) && isNumber(list[1]))
 }
 
 /**
