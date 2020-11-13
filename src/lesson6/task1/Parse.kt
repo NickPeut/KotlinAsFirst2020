@@ -3,7 +3,6 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
-import java.util.*
 import kotlin.math.max
 
 // Урок 6: разбор строк, исключения
@@ -79,40 +78,35 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    val month = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
+    val month = mapOf(
+        "января" to 1,
+        "февраля" to 2,
+        "марта" to 3,
+        "апреля" to 4,
+        "мая" to 5,
+        "июня" to 6,
+        "июля" to 7,
+        "августа" to 8,
+        "сентября" to 9,
+        "октября" to 10,
+        "ноября" to 11,
+        "декабря" to 12
     )
     val date = str.split(' ').toMutableList()
-    if (date.size < 3)
+    if (date.size != 3)
         return ""
     if (!isNumber(date[0]) || !isNumber(date[2]) || date[1] !in month) {
         return ""
     }
-    var j = 0
-    for (i in 0..month.size)
-        if (month[i] == date[1]) {
-            j = i
-            break
-        }
-    if (date[0].toInt() > daysInMonth(j + 1, date[2].toInt()))
+    val j = month.getValue(date[1])
+    if (date[0].toInt() > daysInMonth(j, date[2].toInt()))
         return ""
-    date[0] = twoDigitStr(date[0].toInt())
-    date[1] = twoDigitStr(j + 1)
-    return date.joinToString(separator = ".")
+    val day = twoDigitStr(date[0].toInt())
+    val m = twoDigitStr(j)
+    return "$day.$m.${date[2]}"
 }
 
-fun isNumber(s: String): Boolean = s.all { it.isDigit() };
+fun isNumber(s: String): Boolean = s.toIntOrNull() != null
 
 
 /**
@@ -149,9 +143,9 @@ fun dateDigitToStr(digital: String): String {
 
     if (date[0].toInt() > daysInMonth(date[1].toInt(), date[2].toInt()))
         return ""
-    date[0] = date[0].toInt().toString()
-    date[1] = month[date[1].toInt() - 1]
-    return date.joinToString(separator = " ")
+    val day = date[0].toInt().toString()
+    val m = month[date[1].toInt() - 1]
+    return "$day $m ${date[2]}"
 }
 
 /**
@@ -168,11 +162,7 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String {
-    if (checkPhone(phone))
-        return ""
-    return phone.filter { it.isDigit() || it == '+' }
-}
+fun flattenPhoneNumber(phone: String): String = TODO()
 
 fun checkPhone(phone: String): Boolean =
     phone.count { it.isDigit() || it == ' ' || it == '+' || it == '-' || it == '(' || it == ')' } < phone.length ||
@@ -188,10 +178,10 @@ fun checkPhone(phone: String): Boolean =
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int {
+fun bestLongJump(jumps: String): Int? {
     if (checkRes(jumps))
         return -1
-    return Collections.max(jumps.split(" ").filter { it -> isNumber(it) }.map { it -> it.toInt() })
+    return jumps.split(" ").filter { isNumber(it) }.map { it.toInt() }.maxByOrNull { it }
 }
 
 fun checkRes(jumps: String): Boolean =
@@ -210,27 +200,19 @@ fun checkRes(jumps: String): Boolean =
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val list = jumps.split(" ")
-    if (checkHeight(jumps, list))
-        return -1
+    val check = setOf('+', '%', '-')
+    val parts = jumps.split(' ')
+    if (parts.size % 2 != 0) return -1
     var ans = -1
-    for (i in list.indices step 2) {
-        if ('+' in list[i + 1]) {
-            ans = max(ans, list[i].toInt())
-        }
+    for (i in parts.indices step 2) {
+        if (parts[i].toIntOrNull() == null)
+            return -1
+        if (!parts[i + 1].all { it in check })
+            return -1
+        if ('+' in parts[i + 1])
+            ans = max(ans, parts[i].toInt())
     }
     return ans
-}
-
-fun checkHeight(jumps: String, list: List<String>): Boolean {
-    if (list.size % 2 != 0) return true
-    for (i in list.indices step 2) {
-        if (!isNumber(list[i]) || isNumber(list[i + 1])) {
-            return true
-        }
-    }
-    return jumps.count { it.isDigit() } == 0 ||
-            jumps.count { it.isDigit() || it == ' ' || it == '-' || it == '%' || it == '+' } < jumps.length
 }
 
 /**
@@ -259,13 +241,8 @@ fun plusMinus(expression: String): Int {
 
 fun check(value: List<String>): Boolean {
     if (value.size == 1) return isNumber(value[0])
-    var flag = true
-    for (i in value) {
-        flag = if (flag && isNumber(i)) {
-            false
-        } else if (!flag && !isNumber(i)) {
-            true
-        } else {
+    for (i in value.indices step 2) {
+        if (!isNumber(value[i]) || (value[i + 1] != "+" && value[i + 1] != "-")) {
             return false
         }
     }
@@ -305,17 +282,14 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val tmp = description.split(";").map { it.split(" ") }.map { it.filter { i -> i.isNotEmpty() } }
+    val tmp = description.split("; ").map { it.split(" ") }.map { it.filter { i -> i.isNotEmpty() } }
     if (!checkList(tmp)) return ""
-    return tmp.map { it[0] to it[1].toDouble() }.maxByOrNull { it.second }!!.first;
+    return tmp.map { it[0] to it[1].toDouble() }.maxByOrNull { it.second }!!.first
 }
 
 fun checkList(tmp: List<List<String>>): Boolean = tmp.all { it.size == 2 && isDouble(it[1]) }
 
-fun isDouble(s: String): Boolean {
-    val list = s.split(".")
-    return (list.size == 1 && isNumber(list[0])) || (list.size == 2 && isNumber(list[0]) && isNumber(list[1]))
-}
+fun isDouble(s: String): Boolean = s.toDoubleOrNull() != null
 
 /**
  * Сложная (6 баллов)

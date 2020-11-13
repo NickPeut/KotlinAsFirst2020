@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson1.task1.numberRevert
 import lesson3.task1.isPrime
+import java.lang.StringBuilder
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -316,7 +317,7 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(a: Int): String {
-    val number = mapOf(
+    val number = listOf(
         1000 to "M",
         900 to "CM",
         500 to "D",
@@ -332,15 +333,15 @@ fun roman(a: Int): String {
         1 to "I"
     )
     var num = a
-    var ans = ""
+    val ans = StringBuilder()
     for (i in number) {
-        while (num >= i.key) {
-            ans += i.value
-            num -= i.key
+        while (num >= i.first) {
+            ans.append(i.second)
+            num -= i.first
         }
         if (num <= 0) break
     }
-    return ans
+    return ans.toString()
 }
 
 /**

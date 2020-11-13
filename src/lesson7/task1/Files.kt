@@ -63,15 +63,17 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    val writer = File(outputName).printWriter()
-    for (line in File(inputName).readLines()) {
-        if (line[0] != '_') {
-            writer.println(line)
+    File(outputName).bufferedWriter().use {
+        for (line in File(inputName).readLines()) {
+            if (line.isEmpty())
+                it.write(line)
+            if (line[0] != '_') {
+                it.write(line)
+            }
+            it.newLine()
         }
     }
-    writer.close()
 }
-
 /**
  * Средняя (14 баллов)
  *
@@ -99,7 +101,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  */
 fun sibilants(inputName: String, outputName: String) {
     val set = setOf('ж', 'ч', 'ш', 'щ')
-    val letters = mapOf('ы' to "и", 'я' to "а", 'ю' to "у", 'Я' to "А", 'Ю' to "У")
+    val letters = mapOf('ы' to "и", 'я' to "а", 'ю' to "у", 'Я' to "А", 'Ю' to "У", 'Ы' to "И")
     File(outputName).bufferedWriter().use {
         for (line in File(inputName).readLines()) {
             it.write(line[0].toString())
