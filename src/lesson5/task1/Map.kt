@@ -194,10 +194,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val map = mutableMapOf<String, MutableList<Double>>()
     for ((key, price) in stockPrices) {
-        var value = map[key]
-        if (value != null) {
-            map.getOrPut(key) { mutableListOf() }.add(price)
-        }
+        map.getOrPut(key) { mutableListOf() }.add(price)
     }
     val res = mutableMapOf<String, Double>()
     for ((key, value) in map) {
@@ -283,17 +280,11 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val set = mutableSetOf<Map<Char, Int>>()
-    if (words.size < 2) return false
-    set.add(words[0].map { it to 1 }.toMap())
-    for (i in 1 until words.size) {
-        var tmp = words[i].map { it to 1 }.toMap()
-        if (set.contains(tmp)) {
-            return true
-        }
-        set.add(tmp)
+    val set = mutableSetOf<String>()
+    for (i in words) {
+        set.add(i.toList().sorted().joinToString())
     }
-    return false
+    return set.size != words.size
 }
 
 /**

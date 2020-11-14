@@ -92,7 +92,7 @@ fun dateStrToDigit(str: String): String {
         "ноября" to 11,
         "декабря" to 12
     )
-    val date = str.split(' ').toMutableList()
+    val date = str.split(' ').toList()
     if (date.size != 3)
         return ""
     if (!isNumber(date[0]) || !isNumber(date[2]) || date[1] !in month) {
@@ -106,7 +106,7 @@ fun dateStrToDigit(str: String): String {
     return "$day.$m.${date[2]}"
 }
 
-fun isNumber(s: String): Boolean = s.toIntOrNull() != null
+fun isNumber(s: String): Boolean = s.toIntOrNull() != null && s[0].isDigit()
 
 
 /**
@@ -119,34 +119,7 @@ fun isNumber(s: String): Boolean = s.toIntOrNull() != null
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String {
-    val month = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    val date = digital.split('.').toMutableList()
-    if (date.size != 3)
-        return ""
-
-    if (!isNumber(date[0]) || !isNumber(date[2]) || !isNumber(date[1]))
-        return ""
-
-    if (date[0].toInt() > daysInMonth(date[1].toInt(), date[2].toInt()))
-        return ""
-    val day = date[0].toInt().toString()
-    val m = month[date[1].toInt() - 1]
-    return "$day $m ${date[2]}"
-}
+fun dateDigitToStr(digital: String): String = TODO()
 
 /**
  * Средняя (4 балла)
@@ -229,7 +202,7 @@ fun plusMinus(expression: String): Int {
     if (!check(list))
         throw IllegalArgumentException()
     var ans = list[0].toInt()
-    for (i in 1 until list.size step 2) {
+    for (i in 1 until list.size - 1 step 2) {
         if (list[i] == "+") {
             ans += list[i + 1].toInt()
         } else {
@@ -240,13 +213,12 @@ fun plusMinus(expression: String): Int {
 }
 
 fun check(value: List<String>): Boolean {
-    if (value.size == 1) return isNumber(value[0])
-    for (i in value.indices step 2) {
-        if (!isNumber(value[i]) || (value[i + 1] != "+" && value[i + 1] != "-")) {
+    for (i in 0 until value.size - 1 step 2) {
+        if (!isNumber(value[i]) || value[value.size - 1].toInt() < 0 || (value[i + 1] != "+" && value[i + 1] != "-")) {
             return false
         }
     }
-    return true
+    return isNumber(value[value.size - 1]) && value[value.size - 1].toInt() >= 0
 }
 
 /**

@@ -194,6 +194,10 @@ class Tests {
     @Tag("4")
     fun averageStockPrice() {
         assertEquals(
+            mapOf("" to 0.0),
+            averageStockPrice(listOf("" to 0.0))
+        )
+        assertEquals(
             mapOf<String, Double>(),
             averageStockPrice(listOf())
         )
