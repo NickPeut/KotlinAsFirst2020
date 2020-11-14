@@ -61,9 +61,10 @@ fun square(notation: String): Square =
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = if (start.column == end.column && start.row == end.row) 0
+fun rookMoveNumber(start: Square, end: Square): Int = TODO()
+/*if (start.column == end.column && start.row == end.row) 0
 else if (start.column == end.column || start.row == end.row) 1 else 2
-
+*/
 /**
  * Средняя (3 балла)
  *
@@ -187,7 +188,8 @@ fun kingMoveNumber(start: Square, end: Square): Int =
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()/*{
+fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+/*{
     when (kingMoveNumber(start, end)) {
         0 -> return listOf(start)
         1 -> return listOf(start, end)
