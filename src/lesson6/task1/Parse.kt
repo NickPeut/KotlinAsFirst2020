@@ -95,18 +95,22 @@ fun dateStrToDigit(str: String): String {
     val date = str.split(' ').toList()
     if (date.size != 3)
         return ""
-    if (!isNumber(date[0]) || !isNumber(date[2]) || date[1] !in month) {
+    if (isNumber(date[0]) == null || isNumber(date[2]) == null || date[1] !in month) {
         return ""
     }
+
+    val day = date[0].toInt()
     val j = month.getValue(date[1])
-    if (date[0].toInt() > daysInMonth(j, date[2].toInt()))
+
+    if (day > daysInMonth(j, date[2].toInt()))
         return ""
-    val day = twoDigitStr(date[0].toInt())
+
+    val d = twoDigitStr(day)
     val m = twoDigitStr(j)
-    return "$day.$m.${date[2]}"
+    return "$d.$m.${date[2]}"
 }
 
-fun isNumber(s: String): Boolean = s.toIntOrNull() != null && s[0].isDigit()
+fun isNumber(s: String): Int? = if(s[0].isDigit()) s.toIntOrNull() else null
 
 
 /**
@@ -151,16 +155,15 @@ fun checkPhone(phone: String): Boolean =
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int? {
+fun bestLongJump(jumps: String): Int {
     if (!checkRes(jumps))
         return -1
-    return jumps.split(" ").filter { isNumber(it) }.map { it.toInt() }.maxOrNull()
+    return jumps.split(" ").filter { isNumber(it) != null }.map { it.toInt() }.maxOrNull() ?: -1
 }
 
-fun checkRes(jumps: String): Boolean {
-    val list = jumps.split(" ")
-    return list.find { isNumber(it) } != null && list.all { isNumber(it) || it == "-" || it == "%" }
-}
+fun checkRes(jumps: String): Boolean =
+    jumps.split(" ").all { isNumber(it) != null || it == "-" || it == "%" }
+
 
 /**
  * Сложная (6 баллов)
@@ -205,14 +208,15 @@ fun plusMinus(expression: String): Int {
     if (list[0][0].isDigit())
         ans = list[0].toIntOrNull() ?: throw IllegalArgumentException()
     else throw IllegalArgumentException()
+    if ((list.size - 1) % 2 != 0) throw IllegalArgumentException()
     for (i in 1 until list.size - 1 step 2) {
-        when {
-            list[i] == "+" -> {
+        when(list[i]) {
+            "+" -> {
                 if (list[i + 1][0].isDigit())
                     ans += list[i + 1].toIntOrNull() ?: throw IllegalArgumentException()
                 else throw IllegalArgumentException()
             }
-            list[i] == "-" -> {
+            "-" -> {
                 if (list[i + 1][0].isDigit())
                     ans -= list[i + 1].toIntOrNull() ?: throw IllegalArgumentException()
                 else throw IllegalArgumentException()
@@ -220,6 +224,7 @@ fun plusMinus(expression: String): Int {
             else -> throw IllegalArgumentException()
         }
     }
+
     return ans
 }
 
@@ -256,7 +261,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val tmp = description.split("; ").map { it.split(" ").filter { i -> i.isNotEmpty() } }
+    val tmp = description.split("; ").map { it.split(" ") }
     if (!checkList(tmp)) return ""
     return tmp.map { it[0] to it[1].toDouble() }.maxByOrNull { it.second }?.first ?: ""
 }
