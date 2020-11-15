@@ -283,8 +283,7 @@ fun hasAnagrams(words: List<String>): Boolean {
     val set = mutableSetOf<String>()
     for (i in words) {
         val sorted = i.toList().sorted().joinToString()
-        if (set.find { it == sorted } != null) return true
-        set.add(sorted)
+        if (!set.add(sorted)) return true
     }
     return set.size != words.size
 }
