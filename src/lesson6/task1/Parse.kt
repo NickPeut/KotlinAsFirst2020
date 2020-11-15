@@ -110,7 +110,7 @@ fun dateStrToDigit(str: String): String {
     return "$d.$m.${date[2]}"
 }
 
-fun isNumber(s: String): Int? = if(s[0].isDigit()) s.toIntOrNull() else null
+fun isNumber(s: String): Int? = if (s.isNotEmpty() && s[0].isDigit()) s.toIntOrNull() else null
 
 
 /**
@@ -205,12 +205,12 @@ fun plusMinus(expression: String): Int {
     var ans: Int
     if (list.isEmpty())
         throw IllegalArgumentException()
-    if (list[0][0].isDigit())
+    if (list[0].isEmpty() || list[0][0].isDigit())
         ans = list[0].toIntOrNull() ?: throw IllegalArgumentException()
     else throw IllegalArgumentException()
     if ((list.size - 1) % 2 != 0) throw IllegalArgumentException()
     for (i in 1 until list.size - 1 step 2) {
-        when(list[i]) {
+        when (list[i]) {
             "+" -> {
                 if (list[i + 1][0].isDigit())
                     ans += list[i + 1].toIntOrNull() ?: throw IllegalArgumentException()
@@ -266,7 +266,7 @@ fun mostExpensive(description: String): String {
     return tmp.map { it[0] to it[1].toDouble() }.maxByOrNull { it.second }?.first ?: ""
 }
 
-fun checkList(tmp: List<List<String>>): Boolean = tmp.all { it.size == 2 && it[1].toDoubleOrNull() != null}
+fun checkList(tmp: List<List<String>>): Boolean = tmp.all { it.size == 2 && it[1].toDoubleOrNull() != null }
 
 /**
  * Сложная (6 баллов)
