@@ -152,14 +152,15 @@ fun checkPhone(phone: String): Boolean =
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int? {
-    if (checkRes(jumps))
+    if (!checkRes(jumps))
         return -1
-    return jumps.split(" ").filter { isNumber(it) }.map { it.toInt() }.maxByOrNull { it }
+    return jumps.split(" ").filter { isNumber(it) }.map { it.toInt() }.maxOrNull()
 }
 
-fun checkRes(jumps: String): Boolean =
-    jumps.count { it.isDigit() } == 0 ||
-            jumps.count { it.isDigit() || it == ' ' || it == '-' || it == '%' } < jumps.length
+fun checkRes(jumps: String): Boolean {
+    val list = jumps.split(" ")
+    return list.find { isNumber(it) } != null && list.all { isNumber(it) || it == "-" || it == "%" }
+}
 
 /**
  * Сложная (6 баллов)
@@ -178,12 +179,11 @@ fun bestHighJump(jumps: String): Int {
     if (parts.size % 2 != 0) return -1
     var ans = -1
     for (i in parts.indices step 2) {
-        if (parts[i].toIntOrNull() == null)
-            return -1
+        val tmp = parts[i].toIntOrNull() ?: return -1
         if (!parts[i + 1].all { it in check })
             return -1
         if ('+' in parts[i + 1])
-            ans = max(ans, parts[i].toInt())
+            ans = max(ans, tmp)
     }
     return ans
 }
@@ -198,27 +198,27 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val list = expression.split(' ')
-    if (!check(list))
-        throw IllegalArgumentException()
-    var ans = list[0].toInt()
+    val list = expression.split(" ")
+    var ans: Int
+    if (list[0][0].isDigit())
+        ans = list[0].toIntOrNull() ?: throw IllegalArgumentException()
+    else throw IllegalArgumentException()
     for (i in 1 until list.size - 1 step 2) {
-        if (list[i] == "+") {
-            ans += list[i + 1].toInt()
-        } else {
-            ans -= list[i + 1].toInt()
+        when {
+            list[i] == "+" -> {
+                if (list[i + 1][0].isDigit())
+                    ans += list[i + 1].toIntOrNull() ?: throw IllegalArgumentException()
+                else throw IllegalArgumentException()
+            }
+            list[i] == "-" -> {
+                if (list[i + 1][0].isDigit())
+                    ans -= list[i + 1].toIntOrNull() ?: throw IllegalArgumentException()
+                else throw IllegalArgumentException()
+            }
+            else -> throw IllegalArgumentException()
         }
     }
     return ans
-}
-
-fun check(value: List<String>): Boolean {
-    for (i in 0 until value.size - 1 step 2) {
-        if (!isNumber(value[i]) || value[value.size - 1].toInt() < 0 || (value[i + 1] != "+" && value[i + 1] != "-")) {
-            return false
-        }
-    }
-    return isNumber(value[value.size - 1]) && value[value.size - 1].toInt() >= 0
 }
 
 /**
@@ -254,14 +254,12 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val tmp = description.split("; ").map { it.split(" ") }.map { it.filter { i -> i.isNotEmpty() } }
+    val tmp = description.split("; ").map { it.split(" ").filter { i -> i.isNotEmpty() } }
     if (!checkList(tmp)) return ""
-    return tmp.map { it[0] to it[1].toDouble() }.maxByOrNull { it.second }!!.first
+    return tmp.map { it[0] to it[1].toDouble() }.maxByOrNull { it.second }?.first ?: ""
 }
 
-fun checkList(tmp: List<List<String>>): Boolean = tmp.all { it.size == 2 && isDouble(it[1]) }
-
-fun isDouble(s: String): Boolean = s.toDoubleOrNull() != null
+fun checkList(tmp: List<List<String>>): Boolean = tmp.all { it.size == 2 && it[1].toDoubleOrNull() != null}
 
 /**
  * Сложная (6 баллов)
@@ -313,3 +311,4 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
