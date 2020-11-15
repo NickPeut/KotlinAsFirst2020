@@ -33,6 +33,7 @@ class Tests {
     @Test
     @Tag("2")
     fun square() {
+        assertEquals(Square(1, 1), square("a1"))
         assertEquals(Square(3, 2), square("c2"))
         assertEquals(Square(5, 5), square("e5"))
         assertEquals(Square(6, 8), square("f8"))

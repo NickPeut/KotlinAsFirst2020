@@ -200,6 +200,8 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     val list = expression.split(" ")
     var ans: Int
+    if (list.isEmpty())
+        throw IllegalArgumentException()
     if (list[0][0].isDigit())
         ans = list[0].toIntOrNull() ?: throw IllegalArgumentException()
     else throw IllegalArgumentException()
