@@ -123,7 +123,39 @@ fun isNumber(s: String): Int? = if (s.isNotEmpty() && s[0].isDigit()) s.toIntOrN
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(str: String): String {
+    val month = mapOf(
+        "января" to 1,
+        "февраля" to 2,
+        "марта" to 3,
+        "апреля" to 4,
+        "мая" to 5,
+        "июня" to 6,
+        "июля" to 7,
+        "августа" to 8,
+        "сентября" to 9,
+        "октября" to 10,
+        "ноября" to 11,
+        "декабря" to 12
+    )
+
+    val date = str.split(' ').toList()
+    if (date.size != 3)
+        return ""
+    val day = isNumber(date[0])
+    if (day == null || isNumber(date[2]) == null || date[1] !in month) {
+        return ""
+    }
+
+    val j = month.getValue(date[1])
+
+    if (day > daysInMonth(j, date[2].toInt()))
+        return ""
+
+    val d = twoDigitStr(day)
+    val m = twoDigitStr(j)
+    return "$d.$m.${date[2]}"
+}
 
 /**
  * Средняя (4 балла)
@@ -206,25 +238,21 @@ fun plusMinus(expression: String): Int {
     if (list.isEmpty())
         throw IllegalArgumentException()
     if (list[0].isEmpty() || list[0][0].isDigit())
-        ans = list[0].toIntOrNull() ?: throw IllegalArgumentException()
+        ans = isNumber(list[0]) ?: throw IllegalArgumentException()
     else throw IllegalArgumentException()
     if ((list.size - 1) % 2 != 0) throw IllegalArgumentException()
     for (i in 1 until list.size - 1 step 2) {
+        val tmp = isNumber(list[i + 1])
         when (list[i]) {
             "+" -> {
-                if (list[i + 1][0].isDigit())
-                    ans += list[i + 1].toIntOrNull() ?: throw IllegalArgumentException()
-                else throw IllegalArgumentException()
+                ans += tmp ?: throw IllegalArgumentException()
             }
             "-" -> {
-                if (list[i + 1][0].isDigit())
-                    ans -= list[i + 1].toIntOrNull() ?: throw IllegalArgumentException()
-                else throw IllegalArgumentException()
+                ans -= tmp ?: throw IllegalArgumentException()
             }
             else -> throw IllegalArgumentException()
         }
     }
-
     return ans
 }
 
