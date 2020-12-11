@@ -2,9 +2,8 @@
 
 package lesson7.task1
 
-import jdk.security.jarsigner.JarSigner
+import com.sun.tools.javac.comp.Todo
 import java.io.File
-import java.lang.StringBuilder
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -301,66 +300,10 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
-
-
- * - *текст в курсивном начертании* -- курсив
- * - **текст в полужирном начертании** -- полужирный
- * - ~~зачёркнутый текст~~ -- зачёркивание
- *
- * Следует вывести в выходной файл этот же текст в формате HTML:
- * - <i>текст в курсивном начертании</i>
- * - <b>текст в полужирном начертании</b>
- * - <s>зачёркнутый текст</s>
  */
-
-fun markdownToHtmlSimple(inputName: String, outputName: String): Nothing = TODO() /*{
-    val text = File(inputName).readText().replace("\r", "").trim('\n')
-    val ansTextList = mutableListOf("<html><body>", "<p>")
-    var i = 0
-    fun nextMark(mark: Char) {
-        var str = StringBuilder()
-        while (text[i] != mark) {
-            if (text[i] == '\n' && text[i + 1] == '\n') {
-                ansTextList.add(str.toString())
-                ansTextList.add("</p>")
-                ansTextList.add("<p>")
-                str = StringBuilder()
-                i += 2
-                continue
-            }
-            str.append(text[i])
-            i++
-        }
-    }
-    while (i < text.length) {
-        if (text[i] == '*' && text[i + 1] != '*') {
-            i++
-            ansTextList.add("<i>")
-            nextMark('*')
-            i++
-            ansTextList.add("</i>")
-        }
-        if (text[i] == '*' && text[i + 1] == '*') {
-            i += 2
-            ansTextList.add("<b>")
-            nextMark('*')
-            ansTextList.add("</b>")
-            i += 2
-        }
-        if (text[i] == '~' && text[i + 1] == '~') {
-            i += 2
-            ansTextList.add("<b>")
-            nextMark('~')
-            ansTextList.add("</b>")
-            i += 2
-        }
-    }
-    ansTextList.add("</p>")
-    ansTextList.add("</body></html>")
-
-    val res = ansTextList.joinToString(separator = "")
-    File(outputName).bufferedWriter().use { it.write(res) }
-}*/
+fun markdownToHtmlSimple(inputName: String, outputName: String) {
+    TODO()
+}
 
 /**
  * Сложная (23 балла)
@@ -500,31 +443,9 @@ fun markdownToHtml(inputName: String, outputName: String) {
 2350
  *
  */
-fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String): Nothing = TODO()/*{
-    val lenRes = (rhv * lhv).toString().length
-    var num = rhv
-    val outputFile = File(outputName).bufferedWriter()
-    outputFile.write(" ".repeat(lenRes - lhv.toString().length))
-    outputFile.write("$lhv.toString()\n*" + " ".repeat(lenRes - rhv.toString().length - 1) + "$rhv.toString()\n")
-    outputFile.write("$rhv.toString()\n" + "-".repeat(lenRes) + "\n")
-    for (i in rhv.toString().indices) {
-        val tmp = (num % 10) * lhv
-        val diff = tmp.toString().length - 1 + i
-        if (i == 0)
-            outputFile.write(" ".repeat(lenRes - diff))
-        else
-            outputFile.write("+" + " ".repeat(lenRes- diff))
-
-        outputFile.write("$tmp\n")
-        num /= 10
-    }
-    for (i in 0..lenRes) {
-        outputFile.write("-")
-    }
-    outputFile.write("\n ${lhv * rhv}")
-    outputFile.close()
+fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
+    TODO()
 }
-*/
 
 /**
  * Сложная (25 баллов)
