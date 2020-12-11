@@ -2,7 +2,6 @@
 
 package lesson7.task1
 
-import com.sun.tools.javac.comp.Todo
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -444,7 +443,28 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val lenRes = (rhv * lhv).toString().length
+    var num = rhv
+    val outputFile = File(outputName).bufferedWriter()
+    outputFile.write(" ".repeat(lenRes - lhv.toString().length))
+    outputFile.write("$lhv.toString()\n*" + " ".repeat(lenRes - rhv.toString().length - 1) + "$rhv.toString()\n")
+    outputFile.write("$rhv.toString()\n" + "-".repeat(lenRes) + "\n")
+    for (i in rhv.toString().indices) {
+        val tmp = (num % 10) * lhv
+        val diff = tmp.toString().length - 1 + i
+        if (i == 0)
+            outputFile.write(" ".repeat(lenRes - diff))
+        else
+            outputFile.write("+" + " ".repeat(lenRes- diff))
+
+        outputFile.write("$tmp\n")
+        num /= 10
+    }
+    for (i in 0..lenRes) {
+        outputFile.write("-")
+    }
+    outputFile.write("\n ${lhv * rhv}")
+    outputFile.close()
 }
 
 /**
