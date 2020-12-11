@@ -312,7 +312,8 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * - <b>текст в полужирном начертании</b>
  * - <s>зачёркнутый текст</s>
  */
-fun markdownToHtmlSimple(inputName: String, outputName: String) {
+
+fun markdownToHtmlSimple(inputName: String, outputName: String): Nothing = TODO() /*{
     val text = File(inputName).readText().replace("\r", "").trim('\n')
     val ansTextList = mutableListOf("<html><body>", "<p>")
     var i = 0
@@ -359,7 +360,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     val res = ansTextList.joinToString(separator = "")
     File(outputName).bufferedWriter().use { it.write(res) }
-}
+}*/
 
 /**
  * Сложная (23 балла)
