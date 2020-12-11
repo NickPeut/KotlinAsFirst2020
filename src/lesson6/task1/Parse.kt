@@ -123,38 +123,35 @@ fun isNumber(s: String): Int? = if (s.isNotEmpty() && s[0].isDigit()) s.toIntOrN
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(str: String): String {
-    val month = mapOf(
-        "января" to 1,
-        "февраля" to 2,
-        "марта" to 3,
-        "апреля" to 4,
-        "мая" to 5,
-        "июня" to 6,
-        "июля" to 7,
-        "августа" to 8,
-        "сентября" to 9,
-        "октября" to 10,
-        "ноября" to 11,
-        "декабря" to 12
+fun dateDigitToStr(digital: String): String {
+    val month = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
     )
-
-    val date = str.split(' ').toList()
+    val date = digital.split('.').toMutableList()
     if (date.size != 3)
         return ""
     val day = isNumber(date[0])
-    if (day == null || isNumber(date[2]) == null || date[1] !in month) {
-        return ""
-    }
-
-    val j = month.getValue(date[1])
-
-    if (day > daysInMonth(j, date[2].toInt()))
+    val mnth = isNumber(date[1])
+    val year = isNumber(date[2])
+    if (day !is Int || mnth !is Int || year !is Int)
         return ""
 
-    val d = twoDigitStr(day)
-    val m = twoDigitStr(j)
-    return "$d.$m.${date[2]}"
+    if (day > daysInMonth(mnth, year))
+        return ""
+    val dayStr = day.toString()
+    val m = month[mnth - 1]
+    return "$dayStr $m ${date[2]}"
 }
 
 /**
