@@ -361,12 +361,13 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 if (i + 1 < text.length && text[i] == '\n' && text[i + 1] == '\n') {
                     ansTextList.add(str.toString())
                     str = StringBuilder()
-                    if (ansTextList[ansTextList.size - 1] != "<p>") {
-                        ansTextList.add("</p>")
-                        ansTextList.add("<p>")
-                    }
+                    ansTextList.add("</p>")
+                    ansTextList.add("<p>")
+                    while (i + 1 < text.length && text[i + 1] == '\n')
+                        i++
+                } else {
+                    str.append(text[i])
                 }
-                str.append(text[i])
             }
         }
         i++
