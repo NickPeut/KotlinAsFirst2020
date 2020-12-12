@@ -95,14 +95,14 @@ fun dateStrToDigit(str: String): String {
     val date = str.split(' ').toList()
     if (date.size != 3)
         return ""
-    if (isNumber(date[0]) == null || isNumber(date[2]) == null || date[1] !in month) {
+    val day = isNumber(date[0])
+    val year = isNumber(date[2])
+    if (day == null || year == null || date[1] !in month) {
         return ""
     }
-
-    val day = date[0].toInt()
     val j = month.getValue(date[1])
 
-    if (day > daysInMonth(j, date[2].toInt()))
+    if (day > daysInMonth(j, year))
         return ""
 
     val d = twoDigitStr(day)
@@ -185,13 +185,14 @@ fun checkPhone(phone: String): Boolean =
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (!checkRes(jumps))
+    val splitJumps = jumps.split(" ")
+    if (!checkRes(splitJumps))
         return -1
-    return jumps.split(" ").filter { isNumber(it) != null }.map { it.toInt() }.maxOrNull() ?: -1
+    return splitJumps.filter { isNumber(it) != null }.map { it.toInt() }.maxOrNull() ?: -1
 }
 
-fun checkRes(jumps: String): Boolean =
-    jumps.split(" ").all { isNumber(it) != null || it == "-" || it == "%" }
+fun checkRes(jumps: List<String>): Boolean =
+    jumps.all { isNumber(it) != null || it == "-" || it == "%" }
 
 
 /**
