@@ -358,13 +358,22 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
             }
             else -> {
-                if (i + 1 < text.length && text[i] == '\n' && text[i + 1] == '\n') {
+                var j = i + 1
+                while (j < text.length && (text[i] == ' ' || text[i] == '\t'))
+                    j++
+                if (j < text.length && text[i] == '\n' && text[j] == '\n') {
                     ansTextList.add(str.toString())
                     str = StringBuilder()
                     ansTextList.add("</p>")
                     ansTextList.add("<p>")
-                    while (i + 1 < text.length && text[i + 1] == '\n')
-                        i++
+                    var g = j
+                    while (g < text.length && (text[g] == '\n' || text[g] == '\t' || text[g] == ' ')) {
+                        if (text[g] == '\n') {
+                            j = g
+                        }
+                        g++
+                    }
+                    i = j
                 } else {
                     str.append(text[i])
                 }
