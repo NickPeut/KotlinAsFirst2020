@@ -318,7 +318,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val ansTextList = mutableListOf("<html><body>", "<p>")
     var i = 0
     var str = StringBuilder()
-    var stack = Stack<String>()
+    val stack = Stack<String>()
     while (i < text.length) {
         when (text[i]) {
             '~', '*' -> {
@@ -361,8 +361,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 if (i + 1 < text.length && text[i] == '\n' && text[i + 1] == '\n') {
                     ansTextList.add(str.toString())
                     str = StringBuilder()
-                    ansTextList.add("</p>")
-                    ansTextList.add("<p>")
+                    if (ansTextList[ansTextList.size - 1] != "<p>") {
+                        ansTextList.add("</p>")
+                        ansTextList.add("<p>")
+                    }
                 }
                 str.append(text[i])
             }
