@@ -3,6 +3,8 @@
 package lesson7.task1
 
 import java.io.File
+import java.lang.StringBuilder
+import java.util.*
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -299,13 +301,84 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
+
+ * Во входном файле с именем inputName содержится текст, содержащий в себе элементы текстовой разметки следующих типов:
+ * - *текст в курсивном начертании* -- курсив
+ * - **текст в полужирном начертании** -- полужирный
+ * - ~~зачёркнутый текст~~ -- зачёркивание
+ *
+ * Следует вывести в выходной файл этот же текст в формате HTML:
+ * - <i>текст в курсивном начертании</i>
+ * - <b>текст в полужирном начертании</b>
+ * - <s>зачёркнутый текст</s>
  */
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readText().replace("\r", "").trim('\n')
+    val ansTextList = mutableListOf("<html><body>", "<p>")
+    var i = 0
+    var str = StringBuilder()
+    var stack = Stack<String>()
+    while (i < text.length) {
+        when (text[i]) {
+            '~', '*' -> {
+                ansTextList.add(str.toString())
+                str = StringBuilder()
+                when (text[i]) {
+                    '~' -> {
+                        if (!stack.empty() && stack.peek() == "<s>") {
+                            stack.pop()
+                            ansTextList.add("</s>")
+                        } else {
+                            stack.push("<s>")
+                            ansTextList.add("<s>")
+                        }
+                        i++
+                    }
+                    '*' -> {
+                        if (i + 1 < text.length && text[i + 1] == '*') {
+                            if (!stack.empty() && stack.peek() == "<b>") {
+                                stack.pop()
+                                ansTextList.add("</b>")
+                            } else {
+                                stack.push("<b>")
+                                ansTextList.add("<b>")
+                            }
+                            i++
+                        } else {
+                            if (!stack.empty() && stack.peek() == "<i>") {
+                                stack.pop()
+                                ansTextList.add("</i>")
+                            } else {
+                                stack.push("<i>")
+                                ansTextList.add("<i>")
+                            }
+                        }
+                    }
+                }
+            }
+            else -> {
+                if (i + 1 < text.length && text[i] == '\n' && text[i + 1] == '\n') {
+                    ansTextList.add(str.toString())
+                    str = StringBuilder()
+                    ansTextList.add("</p>")
+                    ansTextList.add("<p>")
+                }
+                str.append(text[i])
+            }
+        }
+        i++
+    }
+    if (str.toString() != "")
+        ansTextList.add(str.toString())
+    ansTextList.add("</p></body></html>")
+    val res = ansTextList.joinToString(separator = "")
+    File(outputName).bufferedWriter().use { it.write(res) }
 }
 
 /**
  * Сложная (23 балла)
+ *
  *
  * Реализовать транслитерацию текста в заданном формате разметки в формат разметки HTML.
  *
