@@ -359,7 +359,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             else -> {
                 var j = i + 1
-                while (j < text.length && (text[i] == ' ' || text[i] == '\t'))
+                while (j < text.length && (text[j] == ' ' || text[j] == '\t'))
                     j++
                 if (j < text.length && text[i] == '\n' && text[j] == '\n') {
                     ansTextList.add(str.toString())
