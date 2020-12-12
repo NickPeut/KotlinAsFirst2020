@@ -2,6 +2,8 @@
 
 package lesson9.task1
 
+import java.lang.IllegalArgumentException
+
 // Урок 9: проектирование классов
 // Максимальное количество баллов = 40 (без очень трудных задач = 15)
 
@@ -44,32 +46,58 @@ interface Matrix<E> {
  * height = высота, width = ширина, e = чем заполнить элементы.
  * Бросить исключение IllegalArgumentException, если height или width <= 0.
  */
-fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = TODO()
+fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = MatrixImpl(height, width, e)
+
 
 /**
  * Средняя сложность (считается двумя задачами в 3 балла каждая)
  *
  * Реализация интерфейса "матрица"
  */
-class MatrixImpl<E> : Matrix<E> {
-    override val height: Int = TODO()
+class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : Matrix<E> {
+    private val data = List(height) { MutableList(width) { e } }
 
-    override val width: Int = TODO()
+    init {
+        require(height > 0 && width > 0)
+    }
 
-    override fun get(row: Int, column: Int): E = TODO()
+    override fun get(row: Int, column: Int): E {
+        return if (check(row, column)) data[row][column]
+        else
+            throw IllegalArgumentException()
+    }
 
-    override fun get(cell: Cell): E = TODO()
+    private fun check(row: Int, column: Int): Boolean = row in 0 until height && column in 0 until width
+
+    override fun get(cell: Cell): E = get(cell.row, cell.column)
 
     override fun set(row: Int, column: Int, value: E) {
-        TODO()
+        if (check(row, column))
+            data[row][column] = value
+        else
+            throw IllegalArgumentException()
     }
 
     override fun set(cell: Cell, value: E) {
-        TODO()
+        set(cell.row, cell.column, value)
     }
 
-    override fun equals(other: Any?) = TODO()
+    override fun equals(other: Any?) =
+        other is MatrixImpl<*> && height == other.height && width == other.width && data == other.data
 
-    override fun toString(): String = TODO()
+
+    override fun toString(): String =
+        data.joinToString(
+            prefix = "{Matrix h=${height}, w=${width}:\n", separator = ",\n", postfix = "}"
+        ) {
+            it.joinToString(prefix = " [", separator = ", ", postfix = "]")
+        }
+
+    override fun hashCode(): Int {
+        var result = height
+        result = 31 * result + width
+        result = 31 * result + data.hashCode()
+        return result
+    }
 }
 

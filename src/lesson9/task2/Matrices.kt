@@ -4,6 +4,7 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import java.lang.IllegalArgumentException
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -216,7 +217,28 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
+    var flag: Boolean
+    for (x in 0..lock.height - key.height) {
+        for (y in 0..lock.width - key.width) {
+            flag = true
+            for (i in 0 until key.height) {
+                for (j in 0 until key.width) {
+                    if ((key[i, j] + lock[i + x, j + y]) % 2 == 0) {
+                        flag = false
+                        break
+                    }
+                }
+                if (!flag)
+                    break
+            }
+            if (flag)
+                return Triple(true, x, y)
+        }
+    }
+    return Triple(false, 0, 0)
+
+}
 
 /**
  * Сложная (8 баллов)
@@ -245,7 +267,50 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    for (x in moves) {
+        move(matrix, x)
+    }
+    return matrix
+}
+
+fun move(matrix: Matrix<Int>, x: Int) {
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            if (x == matrix[i, j]) {
+                if (i + 1 < matrix.height) {
+                    if (matrix[i + 1, j] == 0) {
+                        matrix[i + 1, j] = x
+                        matrix[i, j] = 0
+                        return
+                    }
+                }
+                if (j - 1 >= 0) {
+                    if (matrix[i, j - 1] == 0) {
+                        matrix[i, j - 1] = x
+                        matrix[i, j] = 0
+                        return
+                    }
+                }
+                if (j + 1 < matrix.width) {
+                    if (matrix[i, j + 1] == 0) {
+                        matrix[i, j + 1] = x
+                        matrix[i, j] = 0
+                        return
+                    }
+                }
+                if (i - 1 >= 0) {
+                    if (matrix[i - 1, j] == 0) {
+                        matrix[i - 1, j] = x
+                        matrix[i, j] = 0
+                        return
+                    }
+                }
+            }
+        }
+    }
+    throw IllegalStateException()
+}
 
 /**
  * Очень сложная (32 балла)

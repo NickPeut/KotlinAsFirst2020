@@ -329,6 +329,7 @@ class Tests {
                 ), listOf(13, 14, 15)
             )
         )
+
         assertEquals(
             start, fifteenGameMoves(
                 createMatrix(
@@ -340,6 +341,7 @@ class Tests {
                 listOf(4, 8, 12)
             )
         )
+
         assertEquals(
             createMatrix(
                 4, 4, listOf(
