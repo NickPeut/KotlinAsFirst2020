@@ -222,15 +222,13 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
     for (x in 0..lock.height - key.height) {
         for (y in 0..lock.width - key.width) {
             flag = true
-            for (i in 0 until key.height) {
+            loop@ for (i in 0 until key.height) {
                 for (j in 0 until key.width) {
                     if ((key[i, j] + lock[i + x, j + y]) % 2 == 0) {
                         flag = false
-                        break
+                        break@loop
                     }
                 }
-                if (!flag)
-                    break
             }
             if (flag)
                 return Triple(true, x, y)
@@ -272,21 +270,6 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
     var y0 = -1
 
     fun move(matrix: Matrix<Int>, x: Int) {
-        if (x0 == -1 && y0 == -1) {
-            for (i in 0 until matrix.height) {
-                for (j in 0 until matrix.width) {
-                    if (matrix[i, j] == 0) {
-                        x0 = i
-                        y0 = j
-                        break
-                    }
-                }
-                if (x0 != -1)
-                    break
-            }
-        }
-        if (matrix[x0, y0] != 0)
-            throw IllegalStateException()
         if (x0 + 1 < matrix.height) {
             if (matrix[x0 + 1, y0] == x) {
                 matrix[x0 + 1, y0] = 0
@@ -321,6 +304,20 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
         }
         throw IllegalStateException()
     }
+
+    loop@ for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            if (matrix[i, j] == 0) {
+                x0 = i
+                y0 = j
+                break@loop
+            }
+        }
+    }
+
+    if (matrix[x0, y0] != 0)
+        throw IllegalStateException()
+
     for (x in moves) {
         move(matrix, x)
     }

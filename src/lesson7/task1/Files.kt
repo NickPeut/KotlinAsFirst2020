@@ -326,7 +326,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             when (text[i]) {
                 '~' -> {
                     if (i + 1 < text.length && text[i + 1] == '~') {
-                        if (stack.isNotEmpty() && stack[stack.lastIndex] == "<s>") {
+                        if (stack.lastOrNull() == "<s>") {
                             stack.removeLast()
                             ansTextList.add("</s>")
                         } else {

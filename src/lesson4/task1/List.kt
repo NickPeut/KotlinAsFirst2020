@@ -355,11 +355,6 @@ fun roman(a: Int): String {
 fun getNum(m: Int, flag: Boolean): MutableList<String> {
     val ans = mutableListOf<String>()
     if (m % 100 < 10 || m % 100 > 19) {
-        if (flag) when (m % 10) {
-            1 -> ans.add("тысяча")
-            2, 3, 4 -> ans.add("тысячи")
-            5, 6, 7, 8, 9, 0 -> ans.add("тысяч")
-        }
         when (m % 10) {
             1 -> {
                 if (flag) ans.add("одна") else ans.add("один")
@@ -386,7 +381,6 @@ fun getNum(m: Int, flag: Boolean): MutableList<String> {
             9 -> ans.add("девяносто")
         }
     } else {
-        if (flag) ans.add("тысяч")
         when (m % 100) {
             10 -> ans.add("десять")
             11 -> ans.add("одиннадцать")
@@ -421,6 +415,14 @@ fun russian(n: Int): String {
     val ans = getNum(m, false)
     m /= 1000
     if (m != 0) {
+        if (m % 100 < 10 || m % 100 > 19)
+            when (m % 10) {
+                1 -> ans.add("тысяча")
+                2, 3, 4 -> ans.add("тысячи")
+                5, 6, 7, 8, 9, 0 -> ans.add("тысяч")
+            }
+        else
+            ans.add("тысяч")
         val res = getNum(m, true)
         ans += res
     }
