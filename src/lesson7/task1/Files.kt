@@ -317,53 +317,55 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readText().replace("\r", "").trim('\n')
     val ansTextList = mutableListOf("<html><body>", "<p>")
     var i = 0
-    var str = StringBuilder()
-    val stack = Stack<String>()
+    val str = StringBuilder()
+    val stack = mutableListOf<String>()
     while (i < text.length) {
-        when (text[i]) {
-            '~', '*' -> {
-                ansTextList.add(str.toString())
-                str = StringBuilder()
-                when (text[i]) {
-                    '~' -> {
-                        if (!stack.empty() && stack.peek() == "<s>") {
-                            stack.pop()
+        if (text[i] == '~' || text[i] == '*') {
+            ansTextList.add(str.toString())
+            str.clear()
+            when (text[i]) {
+                '~' -> {
+                    if (i + 1 < text.length && text[i + 1] == '~') {
+                        if (stack.isNotEmpty() && stack[stack.lastIndex] == "<s>") {
+                            stack.removeLast()
                             ansTextList.add("</s>")
                         } else {
-                            stack.push("<s>")
+                            stack.add("<s>")
                             ansTextList.add("<s>")
                         }
                         i++
-                    }
-                    '*' -> {
-                        if (i + 1 < text.length && text[i + 1] == '*') {
-                            if (!stack.empty() && stack.peek() == "<b>") {
-                                stack.pop()
-                                ansTextList.add("</b>")
-                            } else {
-                                stack.push("<b>")
-                                ansTextList.add("<b>")
-                            }
-                            i++
+                    } else
+                        str.append(text[i])
+                }
+                '*' -> {
+                    if (i + 1 < text.length && text[i + 1] == '*') {
+                        if (stack.isNotEmpty() && stack[stack.lastIndex] == "<b>") {
+                            stack.removeLast()
+                            ansTextList.add("</b>")
                         } else {
-                            if (!stack.empty() && stack.peek() == "<i>") {
-                                stack.pop()
-                                ansTextList.add("</i>")
-                            } else {
-                                stack.push("<i>")
-                                ansTextList.add("<i>")
-                            }
+                            stack.add("<b>")
+                            ansTextList.add("<b>")
+                        }
+                        i++
+                    } else {
+                        if (stack.isNotEmpty() && stack[stack.lastIndex] == "<i>") {
+                            stack.removeLast()
+                            ansTextList.add("</i>")
+                        } else {
+                            stack.add("<i>")
+                            ansTextList.add("<i>")
                         }
                     }
                 }
             }
-            else -> {
+        } else {
+            if (text[i] == '\n') {
                 var j = i + 1
                 while (j < text.length && (text[j] == ' ' || text[j] == '\t'))
                     j++
                 if (j < text.length && text[i] == '\n' && text[j] == '\n') {
                     ansTextList.add(str.toString())
-                    str = StringBuilder()
+                    str.clear()
                     ansTextList.add("</p>")
                     ansTextList.add("<p>")
                     var g = j
@@ -377,6 +379,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 } else {
                     str.append(text[i])
                 }
+            } else {
+                str.append(text[i])
             }
         }
         i++

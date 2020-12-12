@@ -268,48 +268,63 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * 3 10 11  8
  */
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    var x0 = -1
+    var y0 = -1
+
+    fun move(matrix: Matrix<Int>, x: Int) {
+        if (x0 == -1 && y0 == -1) {
+            for (i in 0 until matrix.height) {
+                for (j in 0 until matrix.width) {
+                    if (matrix[i, j] == 0) {
+                        x0 = i
+                        y0 = j
+                        break
+                    }
+                }
+                if (x0 != -1)
+                    break
+            }
+        }
+        if (matrix[x0, y0] != 0)
+            throw IllegalStateException()
+        if (x0 + 1 < matrix.height) {
+            if (matrix[x0 + 1, y0] == x) {
+                matrix[x0 + 1, y0] = 0
+                matrix[x0, y0] = x
+                x0 += 1
+                return
+            }
+        }
+        if (y0 - 1 >= 0) {
+            if (matrix[x0, y0 - 1] == x) {
+                matrix[x0, y0 - 1] = 0
+                matrix[x0, y0] = x
+                y0 -= 1
+                return
+            }
+        }
+        if (y0 + 1 < matrix.width) {
+            if (matrix[x0, y0 + 1] == x) {
+                matrix[x0, y0 + 1] = 0
+                matrix[x0, y0] = x
+                y0 += 1
+                return
+            }
+        }
+        if (x0 - 1 >= 0) {
+            if (matrix[x0 - 1, y0] == x) {
+                matrix[x0 - 1, y0] = 0
+                matrix[x0, y0] = x
+                x0 -= 1
+                return
+            }
+        }
+        throw IllegalStateException()
+    }
     for (x in moves) {
         move(matrix, x)
     }
     return matrix
-}
-
-fun move(matrix: Matrix<Int>, x: Int) {
-    for (i in 0 until matrix.height) {
-        for (j in 0 until matrix.width) {
-            if (x == matrix[i, j]) {
-                if (i + 1 < matrix.height) {
-                    if (matrix[i + 1, j] == 0) {
-                        matrix[i + 1, j] = x
-                        matrix[i, j] = 0
-                        return
-                    }
-                }
-                if (j - 1 >= 0) {
-                    if (matrix[i, j - 1] == 0) {
-                        matrix[i, j - 1] = x
-                        matrix[i, j] = 0
-                        return
-                    }
-                }
-                if (j + 1 < matrix.width) {
-                    if (matrix[i, j + 1] == 0) {
-                        matrix[i, j + 1] = x
-                        matrix[i, j] = 0
-                        return
-                    }
-                }
-                if (i - 1 >= 0) {
-                    if (matrix[i - 1, j] == 0) {
-                        matrix[i - 1, j] = x
-                        matrix[i, j] = 0
-                        return
-                    }
-                }
-            }
-        }
-    }
-    throw IllegalStateException()
 }
 
 /**

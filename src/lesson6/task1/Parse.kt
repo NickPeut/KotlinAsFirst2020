@@ -102,7 +102,7 @@ fun dateStrToDigit(str: String): String {
     }
     val j = month.getValue(date[1])
 
-    if (day > daysInMonth(j, year))
+    if (day > daysInMonth(j, year) || day == 0)
         return ""
 
     val d = twoDigitStr(day)
@@ -144,14 +144,13 @@ fun dateDigitToStr(digital: String): String {
     val day = isNumber(date[0])
     val mnth = isNumber(date[1])
     val year = isNumber(date[2])
-    if (day !is Int || mnth !is Int || year !is Int)
+    if (day == null || mnth == null || year == null)
         return ""
 
-    if (day > daysInMonth(mnth, year))
+    if (day > daysInMonth(mnth, year) || day == 0)
         return ""
-    val dayStr = day.toString()
     val m = month[mnth - 1]
-    return "$dayStr $m ${date[2]}"
+    return "$day $m ${date[2]}"
 }
 
 /**
@@ -188,7 +187,7 @@ fun bestLongJump(jumps: String): Int {
     val splitJumps = jumps.split(" ")
     if (!checkRes(splitJumps))
         return -1
-    return splitJumps.filter { isNumber(it) != null }.map { it.toInt() }.maxOrNull() ?: -1
+    return splitJumps.filter { isNumber(it) != null }.maxByOrNull { it.toInt() }?.toIntOrNull() ?: -1
 }
 
 fun checkRes(jumps: List<String>): Boolean =
@@ -234,24 +233,22 @@ fun plusMinus(expression: String): Int {
     val list = expression.split(" ")
     if (list.isEmpty())
         throw IllegalArgumentException()
-    var ans: Int? = isNumber(list[0]) ?: throw IllegalArgumentException()
+    var ans: Int = isNumber(list[0]) ?: throw IllegalArgumentException()
 
     if ((list.size - 1) % 2 != 0) throw IllegalArgumentException()
     for (i in 1 until list.size - 1 step 2) {
-        val tmp = isNumber(list[i + 1])
-        if (ans != null) {
-            when (list[i]) {
-                "+" -> {
-                    ans += tmp ?: throw IllegalArgumentException()
-                }
-                "-" -> {
-                    ans -= tmp ?: throw IllegalArgumentException()
-                }
-                else -> throw IllegalArgumentException()
+        val tmp = isNumber(list[i + 1]) ?: throw IllegalArgumentException()
+        when (list[i]) {
+            "+" -> {
+                ans += tmp
             }
+            "-" -> {
+                ans -= tmp
+            }
+            else -> throw IllegalArgumentException()
         }
     }
-    return ans ?: throw IllegalArgumentException()
+    return ans
 }
 
 /**

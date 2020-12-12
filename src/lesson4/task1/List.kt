@@ -351,14 +351,22 @@ fun roman(a: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
+
+fun getNum(m: Int, flag: Boolean): MutableList<String> {
     val ans = mutableListOf<String>()
-    var m = n
-    if (m == 0) return "ноль"
     if (m % 100 < 10 || m % 100 > 19) {
+        if (flag) when (m % 10) {
+            1 -> ans.add("тысяча")
+            2, 3, 4 -> ans.add("тысячи")
+            5, 6, 7, 8, 9, 0 -> ans.add("тысяч")
+        }
         when (m % 10) {
-            1 -> ans.add("один")
-            2 -> ans.add("два")
+            1 -> {
+                if (flag) ans.add("одна") else ans.add("один")
+            }
+            2 -> {
+                if (flag) ans.add("две") else ans.add("два")
+            }
             3 -> ans.add("три")
             4 -> ans.add("четыре")
             5 -> ans.add("пять")
@@ -378,6 +386,7 @@ fun russian(n: Int): String {
             9 -> ans.add("девяносто")
         }
     } else {
+        if (flag) ans.add("тысяч")
         when (m % 100) {
             10 -> ans.add("десять")
             11 -> ans.add("одиннадцать")
@@ -391,8 +400,7 @@ fun russian(n: Int): String {
             19 -> ans.add("девятнадцать")
         }
     }
-    m /= 100
-    when (m % 10) {
+    when ((m / 100) % 10) {
         1 -> ans.add("сто")
         2 -> ans.add("двести")
         3 -> ans.add("триста")
@@ -403,58 +411,18 @@ fun russian(n: Int): String {
         8 -> ans.add("восемьсот")
         9 -> ans.add("девятьсот")
     }
-    m /= 10
+
+    return ans
+}
+
+fun russian(n: Int): String {
+    var m = n
+    if (m == 0) return "ноль"
+    val ans = getNum(m, false)
+    m /= 1000
     if (m != 0) {
-        if (m % 100 < 10 || m % 100 > 19) {
-            when (m % 10) {
-                1 -> ans.add("одна тысяча")
-                2 -> ans.add("две тысячи")
-                3 -> ans.add("три тысячи")
-                4 -> ans.add("четыре тысячи")
-                5 -> ans.add("пять тысяч")
-                6 -> ans.add("шесть тысяч")
-                7 -> ans.add("семь тысяч")
-                8 -> ans.add("восемь тысяч")
-                9 -> ans.add("девять тысяч")
-                0 -> ans.add("тысяч")
-            }
-            when ((m / 10) % 10) {
-                2 -> ans.add("двадцать")
-                3 -> ans.add("тридцать")
-                4 -> ans.add("сорок")
-                5 -> ans.add("пятьдесят")
-                6 -> ans.add("шестьдесят")
-                7 -> ans.add("семьдесят")
-                8 -> ans.add("восемьдесят")
-                9 -> ans.add("девяносто")
-            }
-        } else {
-            ans.add("тысяч")
-            when (m % 100) {
-                10 -> ans.add("десять")
-                11 -> ans.add("одиннадцать")
-                12 -> ans.add("двенадцать")
-                13 -> ans.add("тринадцать")
-                14 -> ans.add("четырнадцать")
-                15 -> ans.add("пятнадцать")
-                16 -> ans.add("шестнадцать")
-                17 -> ans.add("семнадцать")
-                18 -> ans.add("восемнадцать")
-                19 -> ans.add("девятнадцать")
-            }
-        }
-        m /= 100
-        when (m % 10) {
-            1 -> ans.add("сто")
-            2 -> ans.add("двести")
-            3 -> ans.add("триста")
-            4 -> ans.add("четыреста")
-            5 -> ans.add("пятьсот")
-            6 -> ans.add("шестьсот")
-            7 -> ans.add("семьсот")
-            8 -> ans.add("восемьсот")
-            9 -> ans.add("девятьсот")
-        }
+        val res = getNum(m, true)
+        ans += res
     }
     ans.reverse()
     return ans.joinToString(separator = " ")

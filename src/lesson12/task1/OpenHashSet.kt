@@ -27,6 +27,7 @@ class OpenHashSet<T>(val capacity: Int) {
      */
 
     var size: Int = 0
+        private set
 
     /**
      * Признак пустоты
@@ -39,14 +40,17 @@ class OpenHashSet<T>(val capacity: Int) {
      * или false, если такой элемент уже был в таблице, или превышена вместимость таблицы.
      */
     fun add(element: T): Boolean {
-        if (contains(element) || size == capacity) return false
+        if (size == capacity) return false
         var start = hash(element)
-        while (elements[start] != null) {
+        while (elements[start] != null && elements[start] != element) {
             start = (start + 1) % capacity
         }
-        elements[start] = element
-        size++
-        return true
+        return if (elements[start] == null) {
+            elements[start] = element
+            size++
+            true
+        } else
+            false
     }
 
     private fun hash(element: T): Int = (element.hashCode() and 0x7fffffff) % capacity
@@ -56,10 +60,7 @@ class OpenHashSet<T>(val capacity: Int) {
      */
     operator fun contains(element: T): Boolean {
         val start = hash(element)
-        if (elements[start] == element)
-            return true
-
-        var ind = start + 1
+        var ind = start
         while (elements[start] != element && ind != start) {
             ind = (ind + 1) % capacity
         }
@@ -71,20 +72,16 @@ class OpenHashSet<T>(val capacity: Int) {
      * и любой элемент из второй таблицы входит также и в первую
      */
     override fun equals(other: Any?): Boolean {
+        if (other === this)
+            return true
         if (other == null || other !is OpenHashSet<*> || other.size != size)
             return false
-        var flag = true
         for (i in other.elements) {
-            flag = flag && contains(i as T)
+            if (!contains(i as T))
+                return false
         }
-        return flag
+        return true
     }
 
-    override fun hashCode(): Int {
-        var result = 0
-        val hashElements = elements.map { it.hashCode() }.fold(0) { sum, next -> sum + next }
-        result = 31 * result + hashElements
-        result = 31 * result + size
-        return result
-    }
+    override fun hashCode(): Int = elements.sumBy { it.hashCode() }
 }
