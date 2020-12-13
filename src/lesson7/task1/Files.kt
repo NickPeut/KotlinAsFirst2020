@@ -339,7 +339,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
                 '*' -> {
                     if (i + 1 < text.length && text[i + 1] == '*') {
-                        if (stack.isNotEmpty() && stack[stack.lastIndex] == "<b>") {
+                        if (stack.lastOrNull() == "<b>") {
                             stack.removeLast()
                             ansTextList.add("</b>")
                         } else {
@@ -348,7 +348,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         }
                         i++
                     } else {
-                        if (stack.isNotEmpty() && stack[stack.lastIndex] == "<i>") {
+                        if (stack.lastOrNull() == "<i>") {
                             stack.removeLast()
                             ansTextList.add("</i>")
                         } else {

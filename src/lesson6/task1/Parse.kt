@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import java.util.*
 import kotlin.math.max
 
 // Урок 6: разбор строк, исключения
@@ -187,7 +188,7 @@ fun bestLongJump(jumps: String): Int {
     val splitJumps = jumps.split(" ")
     if (!checkRes(splitJumps))
         return -1
-    return splitJumps.filter { isNumber(it) != null }.maxByOrNull { it.toInt() }?.toIntOrNull() ?: -1
+    return Collections.max(jumps.split(" ").map { isNumber(it) ?: -1 })
 }
 
 fun checkRes(jumps: List<String>): Boolean =

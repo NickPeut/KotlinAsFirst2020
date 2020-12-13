@@ -218,20 +218,16 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
-    var flag: Boolean
     for (x in 0..lock.height - key.height) {
-        for (y in 0..lock.width - key.width) {
-            flag = true
-            loop@ for (i in 0 until key.height) {
+        loop@for (y in 0..lock.width - key.width) {
+            for (i in 0 until key.height) {
                 for (j in 0 until key.width) {
                     if ((key[i, j] + lock[i + x, j + y]) % 2 == 0) {
-                        flag = false
-                        break@loop
+                        continue@loop
                     }
                 }
             }
-            if (flag)
-                return Triple(true, x, y)
+            return Triple(true, x, y)
         }
     }
     return Triple(false, 0, 0)
