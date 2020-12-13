@@ -61,11 +61,10 @@ class OpenHashSet<T>(val capacity: Int) {
     operator fun contains(element: T): Boolean {
         val start = hash(element)
         var ind = start
-        while (elements[start] != element) {
-            val new_ind = (ind + 1) % capacity
-            if (new_ind == start)
-                break
-            ind = new_ind
+        while (elements[ind] != element && elements[ind] != null) {
+            ind = (ind + 1) % capacity
+            if (ind == start)
+                return false
         }
         return elements[ind] == element
     }
