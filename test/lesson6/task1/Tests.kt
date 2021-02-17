@@ -153,4 +153,38 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
     }
+
+
+    @Test
+    @Tag("6")
+    fun getQuantityByDay() {
+        assertThrows(IllegalArgumentException::class.java) { getQuantityByDay(listOf("среда ")) }
+        assertEquals(
+            mapOf(
+                "понедельник" to 1, "вторник" to 0,
+                "среда" to 0,
+                "четверг" to 0,
+                "пятница" to 0,
+                "суббота" to 0,
+                "воскресенье" to 0
+            ), getQuantityByDay(listOf("понедельник покушац"))
+        )
+        /*assertEquals(
+            listOf(3, 0, 0, 0, 0, 0, 0),
+            getQuantityByDay(listOf("понедельник покушац", "понедельник уборка", "понедельник котики"))
+        )
+        assertEquals(
+            listOf(1, 0, 1, 0, 1, 0, 0),
+            getQuantityByDay(listOf("понедельник покушац", "среда уборка", "пятница котики"))
+        )
+        assertEquals(
+            listOf(1, 1, 0, 0, 0, 0, 1),
+            getQuantityByDay(listOf("воскресенье магазин", "вторник уборка", "понедельник котики"))
+        )*/
+        assertThrows(IllegalArgumentException::class.java) { getQuantityByDay(listOf("покушац понедельник")) }
+        assertThrows(IllegalArgumentException::class.java) { getQuantityByDay(listOf("пндлнк 0")) }
+        assertThrows(IllegalArgumentException::class.java) { getQuantityByDay(listOf("")) }
+        assertThrows(IllegalArgumentException::class.java) { getQuantityByDay(listOf("среда")) }
+
+    }
 }

@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import java.io.File
 import java.util.*
 import kotlin.math.max
 
@@ -343,3 +344,82 @@ fun fromRoman(roman: String): Int = TODO()
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
 
+/**
+ * Имеется список строк todos, в которых перечислены планы на
+ * предстоящую неделю, например:
+ *
+ * “вторник лекции”,
+ * “пятница друзья”,
+ * “суббота кинотеатр”,
+ * “пятница уборка”
+ *
+ * В качестве результата необходимо вернуть количество дел
+ * в каждый из перечисленных дней недели
+ *
+ * Имя и тип результата функции предложить самостоятельно.
+ *
+ * Если входные аргументы являются некорректными,
+ * бросить IllegalArgumentException
+ *
+ * Кроме функции, следует написать тесты,
+ * подтверждающие её работоспособность.
+ */
+fun getQuantityByDay(todos: List<String>): Map<String, Int> {
+    val todosParse = todos.map { it.split(" ") }
+    val days = mutableMapOf(
+        "понедельник" to 0,
+        "вторник" to 0,
+        "среда" to 0,
+        "четверг" to 0,
+        "пятница" to 0,
+        "суббота" to 0,
+        "воскресенье" to 0
+    )
+    for (i in todosParse) {
+        if (i.size < 2 || i[1] == "")
+            throw IllegalArgumentException()
+        days[i[0]] = (days[i[0]] ?: throw IllegalArgumentException()) + 1
+    }
+    return days
+}
+
+fun robotInMaze(inputName: String, commands: String) {
+// поиск "робота" + определение размера лабиринта
+    val file = mutableListOf<String>()
+    var robotX = 0
+    var robotY = 0
+    var mazeX = 0
+    var mazeY = 0
+    for (string in File(inputName).readLines()) {
+        mazeY++
+        file.add(string)
+        for (sign in string) {
+            if (sign == '*') {
+                robotX = mazeX
+                robotY = mazeY
+            }
+            mazeX++
+        }
+    }
+    val cords = robotY to robotX
+    var xcoords = 0
+    var ycoords = 0
+    var yLast = ""
+    for (cmd in commands) {
+        for (y in file) {
+            ycoords++
+            if (ycoords == robotY) yLast = y
+            for (x in file) {
+                xcoords++
+
+                if (ycoords == cords.first && xcoords == cords.second) {
+                    if (cmd == 'r') {
+                        if (x + 1 == "#" || xcoords + 1 > mazeX - 1) continue
+                        else cords.second + 1
+                    }
+
+                }
+            }
+        }
+    }
+}
