@@ -16,36 +16,50 @@ internal class ComplexTest {
     @Tag("2")
     fun plus() {
         assertApproxEquals(Complex("4-2i"), Complex("1+2i") + Complex("3-4i"), 1e-10)
+        assertApproxEquals(Complex("6-8i"), Complex("3-4i") + Complex("3-4i"), 1e-10)
     }
 
     @Test
     @Tag("2")
     operator fun unaryMinus() {
         assertApproxEquals(Complex(1.0, -2.0), -Complex(-1.0, 2.0), 1e-10)
+        assertApproxEquals(Complex(-1.0, -2.0), -Complex(1.0, 2.0), 1e-10)
     }
 
     @Test
     @Tag("2")
     fun minus() {
         assertApproxEquals(Complex("2-6i"), Complex("3-4i") - Complex("1+2i"), 1e-10)
+        assertApproxEquals(Complex("0-0i"), Complex("3-4i") - Complex("3-4i"), 1e-10)
     }
 
     @Test
     @Tag("4")
     fun times() {
         assertApproxEquals(Complex("11+2i"), Complex("1+2i") * Complex("3-4i"), 1e-10)
+        assertApproxEquals(Complex("16+30i"), Complex("-5-3i") * Complex("-5-3i"), 1e-10)
     }
 
     @Test
     @Tag("4")
     fun div() {
         assertApproxEquals(Complex("1+2i"), Complex("11+2i") / Complex("3-4i"), 1e-10)
+        assertApproxEquals(Complex("1+0i"), Complex("-5-3i") / Complex("-5-3i"), 1e-10)
     }
 
     @Test
     @Tag("2")
     fun equals() {
         assertApproxEquals(Complex(1.0, 2.0), Complex("1+2i"), 1e-12)
+        assertApproxEquals(Complex(-1.0, 2.0), Complex("-1+2i"), 1e-12)
+        assertApproxEquals(Complex(-1.0, -2.0), Complex("-1-2i"), 1e-12)
+        assertApproxEquals(Complex(1.0, -2.0), Complex("1-2i"), 1e-12)
+        assertApproxEquals(Complex(1.0, 0.0), Complex("1+0i"), 1e-12)
+        assertApproxEquals(Complex(0.0, -2.0), Complex("0-2i"), 1e-12)
+
         assertApproxEquals(Complex(1.0, 0.0), Complex(1.0), 1e-12)
+        assertApproxEquals(Complex(1.0, 2.0), Complex(1.0, 2.0), 1e-12)
+        assertApproxEquals(Complex(1.0, -2.0), Complex(1.0, -2.0), 1e-12)
+        assertApproxEquals(Complex(-1.0, 2.0), Complex(-1.0, 2.0), 1e-12)
     }
 }

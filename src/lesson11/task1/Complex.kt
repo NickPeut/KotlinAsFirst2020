@@ -25,14 +25,12 @@ class Complex(val re: Double, val im: Double) {
      */
     companion object {
         private fun takeRealPart(s: String): Double =
-            (if (s[0] == '-') -1.0 else 1.0) * s.split(
-                s.findLast { it == '+' || it == '-' }.toString()
-            )[0].toDouble()
+            (if (s[0] == '-') -1.0 else 1.0) *
+                    s.split("+", "-").filter { it != "" }[0].toDouble()
 
         private fun takeImaginaryPart(s: String): Double =
-            (if (s.findLast { it == '-' } == '-') -1.0 else 1.0) * s.split(
-                s.findLast { it == '+' || it == '-' }.toString()
-            )[1].filter { it != 'i' }.toDouble()
+            (if (s.findLast { it == '-' || it == '+' } == '-') -1.0 else 1.0) *
+                    s.split("+", "-").filter { it != "" }[1].filter { it != 'i' }.toDouble()
     }
 
     constructor(s: String) : this(
