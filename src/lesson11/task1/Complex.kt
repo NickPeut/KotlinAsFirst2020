@@ -3,6 +3,8 @@
 package lesson11.task1
 
 import lesson2.task1.rookOrBishopThreatens
+import java.lang.IllegalArgumentException
+import java.util.function.BooleanSupplier
 
 /**
  * Класс "комплексное число".
@@ -23,10 +25,20 @@ class Complex(val re: Double, val im: Double) {
     /**
      * Конструктор из строки вида x+yi
      */
+
+
     companion object {
-        private fun takeRealPart(s: String): Double =
-            (if (s[0] == '-') -1.0 else 1.0) *
-                    s.split("+", "-").filter { it != "" }[0].toDouble()
+        private fun takeRealPart(s: String): Double {
+            if (checkFormat(s))
+                return (if (s[0] == '-') -1.0 else 1.0) *
+                        s.split("+", "-").filter { it != "" }[0].toDouble()
+            else {
+                print("IllegalArgumentException")
+            }
+            return -1000000000.0
+        }
+
+        private fun checkFormat(s: String): Boolean = Regex("(-?\\d+(?:\\.\\d+)?)(?:([-+]\\d+(?:\\.\\d+)?)i)").matches(s)
 
         private fun takeImaginaryPart(s: String): Double =
             (if (s.findLast { it == '-' || it == '+' } == '-') -1.0 else 1.0) *

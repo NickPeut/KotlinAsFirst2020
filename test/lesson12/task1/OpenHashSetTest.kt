@@ -49,10 +49,16 @@ class OpenHashSetTest {
     fun contains() {
         val set = OpenHashSet<Int>(8)
         set.add(1)
+        set.add(1)
+        set.add(1)
+        set.add(1)
+        set.add(1)
+        set.add(1)
         set.add(3)
         set.add(6)
         assertTrue(3 in set)
         assertFalse(4 in set)
+        assertTrue(6 in set)
     }
 
     @Test
