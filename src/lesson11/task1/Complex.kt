@@ -94,5 +94,7 @@ class Complex(val re: Double, val im: Double) {
     override fun toString(): String = "" + re + if (im > 0) "+" else {
         ""
     } + im + "i"
+
+    override fun hashCode(): Int = super.hashCode()
 }
 
