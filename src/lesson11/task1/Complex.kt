@@ -3,6 +3,7 @@
 package lesson11.task1
 
 import lesson2.task1.rookOrBishopThreatens
+import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.util.function.BooleanSupplier
 
@@ -28,26 +29,15 @@ class Complex(val re: Double, val im: Double) {
 
 
     companion object {
-        private fun takeRealPart(s: String): Double {
-            if (checkFormat(s))
-                return (if (s[0] == '-') -1.0 else 1.0) *
-                        s.split("+", "-").filter { it != "" }[0].toDouble()
-            else {
-                print("IllegalArgumentException")
-            }
-            return -1000000000.0
+        fun correctString(s: String): List<Double> {
+            val ans = Regex("(-?\\d+(?:\\.\\d+)?)(?:([-+]\\d+(?:\\.\\d+)?)i)").matchEntire(s)
+                ?: throw IllegalArgumentException()
+            return listOf(ans.groupValues[1].toDouble(), ans.groupValues[3].toDouble())
         }
-
-        private fun checkFormat(s: String): Boolean = Regex("(-?\\d+(?:\\.\\d+)?)(?:([-+]\\d+(?:\\.\\d+)?)i)").matches(s)
-
-        private fun takeImaginaryPart(s: String): Double =
-            (if (s.findLast { it == '-' || it == '+' } == '-') -1.0 else 1.0) *
-                    s.split("+", "-").filter { it != "" }[1].filter { it != 'i' }.toDouble()
     }
 
     constructor(s: String) : this(
-        takeRealPart(s),
-        takeImaginaryPart(s)
+        correctString(s)[0], correctString(s)[1]
     )
 
     /**
@@ -95,6 +85,6 @@ class Complex(val re: Double, val im: Double) {
         ""
     } + im + "i"
 
-    override fun hashCode(): Int = super.hashCode()
+    override fun hashCode(): Int = re.hashCode() * 31 + im.hashCode()
 }
 

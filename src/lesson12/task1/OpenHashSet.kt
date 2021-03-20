@@ -54,7 +54,6 @@ class OpenHashSet<T>(val capacity: Int) {
     }
 
     private fun hash(element: T): Int = (element.hashCode() and 0x7fffffff) % capacity
-
     /**
      * Проверка, входит ли заданный элемент в хеш-таблицу
      */
