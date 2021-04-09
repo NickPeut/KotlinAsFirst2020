@@ -32,7 +32,7 @@ class Complex(val re: Double, val im: Double) {
         fun correctString(s: String): List<Double> {
             val ans = Regex("(-?\\d+(?:\\.\\d+)?)(?:([-+]\\d+(?:\\.\\d+)?)i)").matchEntire(s)
                 ?: throw IllegalArgumentException()
-            return listOf(ans.groupValues[1].toDouble(), ans.groupValues[3].toDouble())
+            return listOf(ans.groupValues[1].toDouble(), ans.groupValues[2].toDouble())
         }
     }
 

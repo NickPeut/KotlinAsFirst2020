@@ -21,18 +21,32 @@ class OpenHashSet<T>(val capacity: Int) {
      * Массив для хранения элементов хеш-таблицы
      */
     internal val elements = Array<Any?>(capacity) { null }
+    private var count = 0
 
     /**
      * Число элементов в хеш-таблице
      */
-
+    override fun hashCode() = elements.sumBy { it.hashCode() }
     var size: Int = 0
-        private set
 
     /**
      * Признак пустоты
      */
     fun isEmpty(): Boolean = size == 0
+    private fun Any?.hashCode(): Int = this?.hashCode() ?: 0
+
+
+    private fun place(element: T, searchElem: T?): Int {
+        var i = 0
+        val hash = element.hashCode()
+        var space = (hash + i) % capacity
+        if (this.elements[space] == searchElem) return space
+        do {
+            i++
+            space = (hash + i) % capacity
+        } while (this.elements[space] != searchElem && space != hash)
+        return space
+    }
 
     /**
      * Добавление элемента.
@@ -40,49 +54,56 @@ class OpenHashSet<T>(val capacity: Int) {
      * или false, если такой элемент уже был в таблице, или превышена вместимость таблицы.
      */
     fun add(element: T): Boolean {
-        if (size == capacity) return false
-        var start = hash(element)
-        while (elements[start] != null && elements[start] != element) {
-            start = (start + 1) % capacity
+        if (size != capacity) {
+            return if (this.contains(element)) {
+                false
+            } else {
+                this.elements[place(element, null)] = element
+                size++
+                true
+            }
         }
-        return if (elements[start] == null) {
-            elements[start] = element
-            size++
-            true
-        } else
-            false
+        return false
     }
 
-    private fun hash(element: T): Int = (element.hashCode() and 0x7fffffff) % capacity
     /**
      * Проверка, входит ли заданный элемент в хеш-таблицу
      */
-    operator fun contains(element: T): Boolean {
-        val start = hash(element)
-        var ind = start
-        while (elements[ind] != element && elements[ind] != null) {
-            ind = (ind + 1) % capacity
-            if (ind == start)
-                return false
-        }
-        return elements[ind] == element
-    }
+    operator fun contains(element: T): Boolean =
+        this.elements[place(element, element)] == element
 
     /**
      * Таблицы равны, если в них одинаковое количество элементов,
      * и любой элемент из второй таблицы входит также и в первую
      */
     override fun equals(other: Any?): Boolean {
-        if (other === this)
-            return true
-        if (other == null || other !is OpenHashSet<*> || other.size != size)
-            return false
-        for (i in other.elements) {
-            if (!contains(i as T))
-                return false
+        if (this === other) return true
+        if (other !is OpenHashSet<*>) return false
+        if (other.size != this.size) return false
+
+        for (i in 0 until this.size) {
+            if (this.elements[i] != null) {
+                var index = (this.elements[i].hashCode() % this.capacity)
+                var j = 0
+                var count = 0
+                var flag = false
+                while (other.elements[index + j] != null) {
+                    if (other.elements[index + j] == this.elements[i]) {
+                        flag = true
+                    }
+                    j++
+                    count++
+                    if ((index + j) == other.capacity) {
+                        index = 0
+                        j = 0
+                    }
+                    if (count == other.capacity)
+                        break
+                }
+                if (!flag)
+                    return false
+            }
         }
         return true
     }
-
-    override fun hashCode(): Int = elements.sumBy { it.hashCode() }
 }
